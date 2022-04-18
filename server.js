@@ -1,6 +1,7 @@
 var http = require('http')
 var fs = require('fs')
 var url = require('url')
+const { stringify } = require('querystring')
 var port = process.argv[2]
 
 if(!port){
@@ -25,32 +26,81 @@ var server = http.createServer(function(request, response){
   
   // console.log('有个傻子发请求过来啦！路径（带查询参数）为：' + pathWithQuery)
   if(path === "/") {
-    console.log('有人访问/了')
+    
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
-    console.log(' path is : '+ pathWithQuery)  
+  
+    let string = fs.readFileSync('public/index.html').toString()
+    let page1 =fs.readFileSync('db/page1.json')
+    const array= JSON.parse(page1)
+    let result= array.map(item=>`<li>${item.id}</li>`).join('')
    
-    response.write(`
-       <!DOCTYPE html>
-       <head>
-       <link rel="stylesheet" href="/x">
-       </head>
-       <h1>红色的标题</h1>
-       <script src="/y"></script>
-    `)
+    string = string.replace('page1',`<ul id="x">${result}</ul>`)
+    response.write(string)
     response.end()
-  }
-
-
-
-
-
-  else if(path === '/x'){
+  } 
+  else if(path === "/2.html") {
+    
+    response.setHeader('Content-Type', 'text/html;charset=utf-8')
+     
+    const string = fs.readFileSync('public/2.html')
+    response.write(string)
+    response.end()
+  } 
+  else if(path === '/main.js'){
     response.statusCode = 200
-    response.setHeader('Content-Type', 'text/css;charset=utf-8')
-    response.write(`h1{color: red;}\n`)
+    response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
+    const string = fs.readFileSync('public/main.js')
+    response.write(string)
     response.end()
  
   }
+  else if(path === '/2.js'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
+    const string = fs.readFileSync('public/2.js')
+    response.write(string)
+    response.end()
+ 
+  }
+  else if(path === '/style.css'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/css;charset=utf-8')
+    const string = fs.readFileSync('public/style.css')
+    response.write(string)
+    response.end()
+ 
+  }
+  else if(path === '/2.xml'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/xml;charset=utf-8')
+    const string = fs.readFileSync('public/2.xml')
+    response.write(string)
+    response.end()
+ 
+  }
+  else if(path === '/5.json'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'application/json;charset=utf-8')
+    const string = fs.readFileSync('public/5.json')
+    response.write(string)
+    response.end()
+ 
+  } else if(path === '/page2.json'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'application/json;charset=utf-8')
+    const string = fs.readFileSync('db/page2.json')
+    response.write(string)
+    response.end()
+ 
+  }else if(path === '/page3.json'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'application/json;charset=utf-8')
+    const string = fs.readFileSync('db/page3.json')
+    response.write(string)
+    response.end()
+ 
+  }
+  
   else {
     response.statusCode = 404
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
